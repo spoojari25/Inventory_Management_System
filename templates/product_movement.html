@@ -1,0 +1,189 @@
+{% extends 'index.html' %}
+{% block title %}
+Movement
+{% endblock%}
+{% block content %}
+<div class="container">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      
+          {% for category, message in messages %}
+          <div class="alert alert-{{category}} alert-dismissible fade show" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close" class="fade close"><span aria-hidden="true">&times;</span>
+            </button>
+            {% if category == "danger" or category == "warning" or category == "info" or category == "success" %}
+                    <i class="fa fa-warning"></i>
+            {% endif %}
+            {{ message }} </br>
+          {% endfor %}
+      </div>
+    {% endif %}
+{% endwith %}
+  <div class="row row-cols-2">
+    <!--Add Movement-->
+    <div class="col-sm-4">
+      
+      <form action="{{ url_for('movement') }}" method="POST">
+            
+        <div class="form-group col-md-7">
+          <label for="product_move"><b>Movement</b></label>
+            <label for="product_move">Product Name</label>
+            <input type="hidden" class="form-control" name="product_id">
+            <select id="product_move" name="product_name" class="form-control">
+              <option value="Choose...">Choose...</option>
+              {% for product in products %}
+                <option value="{{ product.pro_name }}" id="{{ product._id }}">{{ product.pro_name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+  
+          <div class="form-group col-md-7">
+            <label for="from_loc">From</label>
+            <select id="from_loc" name="from_location" class="form-control">
+              <option value="Choose...">Choose...</option>
+              {% for location in locations %}
+                <option value="{{ location.loc_name }}" id="{{ location._id }}">{{ location.loc_name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+                    
+          <div class="form-group col-md-7">
+            <label for="inputTo">To</label>
+            <select id="to_loc" name="to_location" class="form-control">
+              <option value="Choose...">Choose...</option>
+              {% for location in locations %}
+                <option value="{{ location.loc_name }}" id="{{ location._id }}">{{ location.loc_name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+  
+          <div class="form-group col-md-7">
+            <label for="inputQuantity">Quantity</label>
+            <input type="text" class="form-control" name="product_qty" id="inputQuantity" placeholder="Enter the Quantity" pattern="\d*" title="Numbers Only Please" required>
+          </div>
+          <div class="form-group col-md-6">
+            <button type="submit" class="btn btn-primary">Add Movement</button>
+          </div> 
+        
+        
+        
+      </form>
+    </div>
+    
+    <div class="col-sm-8">
+      <label for="product_move"><b>Movement Table</b></label>
+      <table class="table table-hover table-bordered table-danger">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Product</th>
+            <th scope="col">From</th>
+            <th scope="col">To</th>
+            <th scope="col">Quantity</th>
+            <th scope="col">Date</th>
+            <th scope="col">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for movement in movements %}
+          <tr>
+            <td> {{ loop.index }} </td>
+            <td>{{ movement.product_name }}</td>
+            {% if movement.from_location  == "Choose..." %}
+              <td>-----</td>
+            {% else %}
+              <td>{{ movement.from_location }}</td>
+            {% endif %}
+            {% if movement.to_location  == "Choose..." %}
+              <td>-----</td>
+            {% else %}
+              <td>{{ movement.to_location }}</td>
+            {% endif %}
+            <td>{{ movement.product_qty }}</td>
+            <td>{{ movement.timestamp.date() }}</td>
+            <td> 
+              <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#editMovement{{movement._id}}" >Edit</button> 
+
+           
+<!--Modal Edit Movement -->
+          <div id="editMovement{{movement._id}}" class ="modal fade" tabindex="-1" aria-labelledby="editMovement" aria-hidden="true">
+            <form action="{{ url_for( 'movement' )}}" method="POST">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h4 class="modal-title">Update Movement</h4>
+                  </div>
+                  <div class="modal-body">
+                    <div class="form-group">
+                      <label for="product_move">Product</label>
+            <input type="hidden" class="form-control" name="edit_move" value="{{ movement._id }}">
+            <select name="product_name" class="form-control" disabled>
+              <option selected>Choose...</option>
+              {% for product in products %}
+                {% if product.pro_name == movement.product_name %}
+
+                    <option value="{{ product.pro_name }}" selected>{{ product.pro_name }}</option>
+                {% endif %}
+                <option value="{{ product.pro_name }}">{{ product.pro_name }}</option>
+
+              {% endfor %}
+            </select>  
+          </div>
+                    <div class="form-group">
+                      <label for="from_loc">From</label>
+                      <select name="from_location" class="form-control" disabled>
+                        <option >Choose...</option>
+                        {% for location in locations %}
+                        {% if location.loc_name == movement.from_location %}
+            
+                            <option value="{{ location.loc_name }}" selected>{{ location.loc_name }}</option>
+                        {% endif %}
+                        <option value="{{ location.loc_name }}">{{ location.loc_name }}</option>
+            
+                      {% endfor %}
+                      </select>
+                    </div>
+                    <div class="form-group ">
+                      <label for="to_loc">To</label>
+                      <select name="to_location" class="form-control" disabled>
+                        <option>Choose...</option>
+                        {% for location in locations %}
+                {% if location.loc_name == movement.to_location %}
+
+                    <option value="{{ location.loc_name }}" selected>{{ location.loc_name }}</option>
+                {% endif %}
+                <option value="{{ location.loc_name }}">{{ location.loc_name }}</option>
+    
+              {% endfor %}
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label for="product_id">Quantity</label>
+                      
+                          <input type="text" class="form-control" name ="product_qty" placeholder="Enter The Product" value="{{ movement.product_qty }}" >
+                    </div>
+                    <div class="form-group ">
+                      <button type="submit" class="btn btn-primary">Update</button>
+                      <button class="btn btn-danger" data-dismiss="modal" aria-label="Close">Cancel</button>
+
+                    </div>
+                    
+                   </div>
+                </div>      
+          
+               </div>
+            </form>
+            </div>
+            </td>
+          
+          
+         
+        </tr>
+        {% endfor %}
+        </tbody>
+  </table>
+    </div>
+  </div>
+</div>
+      
+{% endblock %}

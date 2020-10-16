@@ -1,0 +1,29 @@
+{% extends 'index.html' %}
+{% block title %}
+Location
+{% endblock%}
+{% block content %}
+<center><h2><label for="Report"></label><b>Balance Report </b></label></h2></center>
+<div class="container">
+<table class="table table-hover table-bordered table-danger">
+  <thead class="thead-dark">
+      <tr>
+          <th scope="col">Products</th>
+          <th scope="col">Locations</th>
+          <th scope="col">Available Quantity</th>
+      </tr>
+  </thead>
+  <tbody>
+      {% for item in balance %}
+          {% if item.product_qty != 0 %}
+              <tr>
+                  <td>{{ item.product }}</td>
+                  <td>{{ item.location }}</td>
+                  <td>{{ item.product_qty }}</td>
+              </tr>
+          {% endif %}
+      {% endfor %}
+  </tbody>
+</table> 
+</div>
+{% endblock %}

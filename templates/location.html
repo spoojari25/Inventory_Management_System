@@ -1,0 +1,96 @@
+{% extends 'index.html' %}
+{% block title %}
+Location
+{% endblock%}
+{% block content %}
+
+        
+<div class="container">
+  <!--Flash message-->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      
+          {% for category, message in messages %}
+          <div class="alert alert-{{category}} alert-dismissible fade show" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close" class="fade close"><span aria-hidden="true">&times;</span>
+            </button>
+            {% if category == "danger" or category == "warning" or category == "info" or category == "success" %}
+                    <i class="fa fa-warning"></i>
+            {% endif %}
+            {{ message }} </br>
+          {% endfor %}
+      </div>
+    {% endif %}
+{% endwith %}
+<!--Add Location-->
+  <div class="row row-cols-2">
+    <div class="col-sm-6">
+              <form action="{{ url_for('location') }}" method="POST">
+                <div class="form-group col-md-6">
+                    <label for="loc_name"><b>Location Name</b></label>
+                    <input required type="text" class="form-control" id="loc_name" name="loc_name" placeholder="Enter the Location Name" >
+                  </div>            
+                  <div class="form-group col-md-6">
+                    <button type="submit" class="btn btn-primary">Add Location</button>
+                  </div>
+                
+            </form>
+      </div>
+            
+    <div class="col-sm-6">
+      <label for="loc_name"><b>Location Table</b></label>
+              <table class="table table-hover table-bordered table-danger">
+                <thead class="thead-dark">
+                  <tr>
+                    <th scope="col">Location Id</th>
+                    <th scope="col">Location Name</th>
+                    <th scope="col">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for location in locations %}
+                    <tr>
+                      <th> {{ loop.index }} </th>
+                      <td>{{ location.loc_name }}</td>
+          
+                      <td> 
+                        <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#editLocation{{location._id}}" >Edit</button> 
+        
+                     
+        <!--Modal Edit Location -->
+                    <div id="editLocation{{location._id}}" class ="modal fade" tabindex="-1" aria-labelledby="editLocation" aria-hidden="true">
+                      <form action="{{ url_for( 'location' )}}" method="POST">
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h4 class="modal-title">Update Location</h4>
+                            </div>
+                            <div class="modal-body">
+                      
+                              <div class="form-group">
+                                <label for="loc_id">Location Name</label>
+                                <input type="hidden" name="loc_id" value="{{location._id}}">
+                                <input required type="text" class="form-control" name ="edit_loc" placeholder="Enter The Product" value="{{ location.loc_name }}" >
+                              </div>
+                              <div class="form-group ">
+                                <button type="submit" class="btn btn-primary">Update</button>
+                                <button class="btn btn-danger" data-dismiss="modal" aria-label="Close">Cancel</button>
+
+                              </div>
+                      
+                             </div>
+                          </div>      
+                    
+                         </div>
+                      </form>
+                      </div>
+                      </td>
+                    </tr>
+                    {% endfor %}
+        </tbody>
+        
+              </table>
+      </div>
+  </div>
+</div>
+{% endblock %}
