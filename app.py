@@ -1,3 +1,4 @@
+
 from flask import Flask, render_template,flash,redirect,url_for,request,session, Response
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
@@ -10,12 +11,15 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
+# Database Models
+
 class Product(db.Model):
     _id = db.Column( db.Integer, primary_key=True)
     pro_name = db.Column(db.String(50),nullable=False)
 
     def __repr__(self):
         return self.pro_name 
+
 
 class Location(db.Model):
     _id = db.Column( db.Integer, primary_key=True)
@@ -36,6 +40,9 @@ class Movement(db.Model):
     def __repr__(self):
         return self._id
 
+
+#Routing To Home Page
+
 @app.route("/",methods = ["POST","GET"])
 def home():
     return render_template("home.html")
@@ -43,7 +50,7 @@ def home():
 
 @app.route("/product", methods = ["GET","POST"])
 def product():
-    name = None
+
     if request.method=="POST":    
         if 'pro_id' in request.form:
             pro_id = request.form["pro_id"] 
@@ -91,20 +98,20 @@ def location():
 def movement():
     if request.method == "POST":
         if 'product_id' in request.form:
-            product_name = None
-            product_qty=None
+            #product_name = None
+            #product_qty=None
             add = True
             from_location = request.form["from_location"]
-            to_location= request.form["to_location"]    
-            
+            to_location= request.form["to_location"]       
                           
-            if from_location != "Choose..." or to_location != "Choose...":
+            if from_location != 'Choose...' or to_location != 'Choose...':
                 if from_location == to_location:
-                    flash("From and To location cannot be same! ","warning") 
-                    add = False          
+                    add = False
+                    flash('From and To location can not be same!', 'warning')
             else:
-                flash("From and To locations were not selected!", "warning")
+                flash("From and To locations were not selected!", 'warning')
                 add = False
+
 
             if request.form["product_name"] == "Choose...":
                     flash("Please select a product!","warning")     
@@ -122,12 +129,14 @@ def movement():
                         elif int(product_qty) > total_items:
                             flash(f"Exceeds available quantity that is  { total_items } only","warning")
                             add = False
-                        elif int(product_qty) <= total_items:
+                        elif from_location != to_location:
+                            int(product_qty) == total_items
                             add = True 
                             
                 
                     
             if add:    
+                
                 from_location = request.form["from_location"]
                 to_location = request.form["to_location"]
                 product_name = request.form["product_name"]
@@ -145,24 +154,29 @@ def movement():
             movement_pro = movement.product_name
             movement_from = movement.from_location
             movement_to = movement.to_location
-            out_movement = Movement.query.filter_by(product_name=movement_pro).filter_by(from_location=movement_from).count()
-            in_movement = Movement.query.filter_by(product_name=movement_pro).filter_by(to_location=movement_to).count()  
             
-            product_name = movement_pro
+            
             if request.form["product_qty"] != None:
-                if int(request.form["product_qty"]) > 0:
+                if int(new_qty) > 0:
                     new_qty = request.form["product_qty"]
+                    
                 if movement_from != "Choose...":
                     total_items = get_tot(movement_pro,movement_from)
-                    if total_items == 0:
-                        flash(f"{ product_name } is not available at { movement_from }","warning")
+                    if int(new_qty) == 0:
+                        flash(f"Quantity cannot be zero","warning")
+                        edit = False 
+                    elif total_items == 0:
+                        flash(f" { movement_pro }is not available at { movement_from } ","warning")
                         edit = False
                     elif int(new_qty) > total_items:
                         flash(f"Exceeds available quantity that is  { total_items } only","warning")
-                        edit = False
-                    elif int(new_qty) <= total_items:
-                        edit = True 
-                        
+                        edit = False    
+                    elif int(new_qty) < total_items:
+                        edit = True
+                    elif int(new_qty) == total_items:
+                        edit = True
+
+
             if edit:
                 movement.product_qty = new_qty
                 db.session.commit()

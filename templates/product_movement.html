@@ -8,15 +8,16 @@ Movement
     {% if messages %}
       
           {% for category, message in messages %}
-          <div class="alert alert-{{category}} alert-dismissible fade show" role="alert">
+            <div class="alert alert-{{category}} alert-dismissible fade show" role="alert">
             <button type="button" class="close" data-dismiss="alert" aria-label="Close" class="fade close"><span aria-hidden="true">&times;</span>
             </button>
             {% if category == "danger" or category == "warning" or category == "info" or category == "success" %}
                     <i class="fa fa-warning"></i>
             {% endif %}
             {{ message }} </br>
+            </div>
           {% endfor %}
-      </div>
+      
     {% endif %}
 {% endwith %}
   <div class="row row-cols-2">
@@ -64,8 +65,6 @@ Movement
           <div class="form-group col-md-6">
             <button type="submit" class="btn btn-primary">Add Movement</button>
           </div> 
-        
-        
         
       </form>
     </div>
