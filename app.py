@@ -47,6 +47,7 @@ class Movement(db.Model):
 def home():
     return render_template("home.html")
 
+# Add and Edit Products
 
 @app.route("/product", methods = ["GET","POST"])
 def product():
@@ -71,6 +72,9 @@ def product():
     products = Product.query.all()
     return render_template('product.html',products = products)
 
+
+#Add and Edit Location
+
 @app.route("/location",methods=["GET","POST"])
 def location():
     if request.method=="POST":
@@ -93,6 +97,7 @@ def location():
     locations = Location.query.all()
     return render_template("location.html",locations = locations)
 
+#Add and Edit Product Movement
 
 @app.route("/product_movement",methods =["GET","POST"] )
 def movement():
@@ -133,8 +138,6 @@ def movement():
                             int(product_qty) == total_items
                             add = True 
                             
-                
-                    
             if add:    
                 
                 from_location = request.form["from_location"]
@@ -146,6 +149,8 @@ def movement():
                 db.session.add(movement)
                 db.session.commit()
                 flash("Movement is Successfully Saved","success")
+                
+                
         if 'edit_move' in request.form:
             edit = True
             movement_id = request.form['edit_move']
@@ -186,6 +191,7 @@ def movement():
     movements = Movement.query.all()
     return render_template("product_movement.html",movements =movements,products= Product.query.all(),locations = Location.query.all())
 
+#Generating the Reports
 
 @app.route("/Report")
 def Report(prod=[],loc=[]):
