@@ -1,5 +1,5 @@
+
 from flask import Flask, render_template,flash,redirect,url_for,request,session, Response
-from flask import *
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 
@@ -10,7 +10,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///inventory.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
-
 
 # Database Models
 
@@ -99,7 +98,8 @@ def location():
 def movement():
     if request.method == "POST":
         if 'product_id' in request.form:
-            
+            #product_name = None
+            #product_qty=None
             add = True
             from_location = request.form["from_location"]
             to_location= request.form["to_location"]       
@@ -132,7 +132,9 @@ def movement():
                         elif from_location != to_location:
                             int(product_qty) == total_items
                             add = True 
+                            
                 
+                    
             if add:    
                 
                 from_location = request.form["from_location"]
@@ -168,7 +170,7 @@ def movement():
                         edit = False
                     elif int(new_qty) > total_items:
                         flash(f"Exceeds available quantity that is  { total_items } only","warning")
-                        edit = False     
+                        edit = False    
                     elif int(new_qty) < total_items:
                         edit = True
                     elif int(new_qty) == total_items:
@@ -184,35 +186,19 @@ def movement():
     movements = Movement.query.all()
     return render_template("product_movement.html",movements =movements,products= Product.query.all(),locations = Location.query.all())
 
-'''@app.route("/search<>")
-def search(search):
-    locations = Location.query.all()
-    if "search" in request.form:
-
-        search = request.form["search"]
-        #flash(f"{search}")
-        location = Location.query.filter_by(loc_name = search ).all()
-        flash(f"{location}")
-        return search
-        return render_template("Report.html",search = search,locations = location)
-'''
 
 @app.route("/Report")
-def Report(tag=None):
-    msg= ''
-    if 'str' in request.args:
-        tag = request.args.get("str").capitalize()
-        
-    inv = balance(tag)
-    if request.args:
-        if not inv:
-            msg = Markup("<h5>No such data is found!</h5>")
-    elif not inv:
-        msg = Markup("<h4>There's currently no data to display. Add now!</h4>")
+def Report(prod=[],loc=[]):
+    if 'product' in request.args:
+        prod = request.args.getlist('product')
+    if 'location' in request.args:
+        loc = request.args.getlist('location')
+    inv = balance(prod,loc)
     
-    return render_template("Report.html",balance = inv,msg=msg)
+    products = Product.query.all()
+    locations = Location.query.all()
+    return render_template("Report.html",balance=inv, products = products, locations = locations)
 
-    
 
 
 
@@ -227,7 +213,6 @@ def get_out(product,location):
 
 
 def get_tot(product,location):
-    flag = True
     imported = 0
     exported = 0
     imported_items = get_in(product,location)
@@ -241,18 +226,11 @@ def get_tot(product,location):
     total = imported - exported
     return total
 
-def balance(tag=None):
+def balance(product,location):
     balance=[]
+    products = Product.query.all()
+    locations = Location.query.all()
     movements = Movement.query.all()
-    if tag != None:
-        products = Product.query.filter_by(pro_name = tag).all()
-        locations = Location.query.all()
-        if not products:
-            locations = Location.query.filter_by(loc_name = tag).all()
-            products = Product.query.all()
-    else:
-        products = Product.query.all()
-        locations = Location.query.all()
     for location in locations:
         for product in products:
             inv = {}
@@ -266,8 +244,7 @@ def balance(tag=None):
             else:
                 inv['product_qty'] = total
             balance.append(inv)
-    
-    
+
     return balance
 
 

@@ -35,17 +35,13 @@ Product
         
           <div class="form-group col-md-6">
             <button type="submit" class="btn btn-primary">Add Product</button>
-            
-
           </div>
         
     </form>
-    
     </div>
     
     <div class="col-sm-6">
       <label for="pro_name" ><b>Product Table</b></label>
-      
       <table class="table table-hover table-bordered table-danger">
         <thead class="thead-dark">
           <tr>
@@ -54,7 +50,7 @@ Product
             <th scope="col">Action</th>
           </tr>
         </thead>
-        <tbody >
+        <tbody>
           {% for product in products %}
             <tr>
               <th> {{ loop.index }} </th>
@@ -62,8 +58,7 @@ Product
               
               <td> 
                 <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#editProduct{{product._id}}" >Edit</button> 
-                  
-            </td>
+
              
 <!--Modal Edit Product -->
             <div id="editProduct{{product._id}}" class ="modal fade" tabindex="-1" aria-labelledby="editProduct" aria-hidden="true">
