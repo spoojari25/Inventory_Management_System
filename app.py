@@ -188,17 +188,19 @@ def movement():
 
 
 @app.route("/Report")
-def Report(prod=[],loc=[]):
-    if 'product' in request.args:
-        prod = request.args.getlist('product')
-    if 'location' in request.args:
-        loc = request.args.getlist('location')
-    inv = balance(prod,loc)
+def Report(tag=None):
+    msg= ''
+    if 'str' in request.args:
+        tag = request.args.get("str").capitalize()
+        
+    inv = balance(tag)
+    if request.args:
+        if not inv:
+            msg = Markup("<h5>No such data is found!</h5>")
+    elif not inv:
+        msg = Markup("<h4>There's currently no data to display. Add now!</h4>")
     
-    products = Product.query.all()
-    locations = Location.query.all()
-    return render_template("Report.html",balance=inv, products = products, locations = locations)
-
+    return render_template("Report.html",balance = inv,msg=msg)
 
 
 
@@ -226,11 +228,18 @@ def get_tot(product,location):
     total = imported - exported
     return total
 
-def balance(product,location):
+def balance(tag=None):
     balance=[]
-    products = Product.query.all()
-    locations = Location.query.all()
     movements = Movement.query.all()
+    if tag != None:
+        products = Product.query.filter_by(pro_name = tag).all()
+        locations = Location.query.all()
+        if not products:
+            locations = Location.query.filter_by(loc_name = tag).all()
+            products = Product.query.all()
+    else:
+        products = Product.query.all()
+        locations = Location.query.all()
     for location in locations:
         for product in products:
             inv = {}
@@ -244,7 +253,8 @@ def balance(product,location):
             else:
                 inv['product_qty'] = total
             balance.append(inv)
-
+    
+    
     return balance
 
 
