@@ -48,7 +48,6 @@ class Movement(db.Model):
 def home():
     return render_template("home.html")
 
-# Add and Edit Products
 
 @app.route("/product", methods = ["GET","POST"])
 def product():
@@ -73,9 +72,6 @@ def product():
     products = Product.query.all()
     return render_template('product.html',products = products)
 
-
-#Add and Edit Location
-
 @app.route("/location",methods=["GET","POST"])
 def location():
     if request.method=="POST":
@@ -98,7 +94,6 @@ def location():
     locations = Location.query.all()
     return render_template("location.html",locations = locations)
 
-#Add and Edit Product Movement
 
 @app.route("/product_movement",methods =["GET","POST"] )
 def movement():
@@ -137,11 +132,7 @@ def movement():
                         elif from_location != to_location:
                             int(product_qty) == total_items
                             add = True 
-<<<<<<< HEAD
                 
-=======
-                            
->>>>>>> fb95f7fa65c7eb62f80ff5eb3257d1c64644265e
             if add:    
                 
                 from_location = request.form["from_location"]
@@ -153,8 +144,6 @@ def movement():
                 db.session.add(movement)
                 db.session.commit()
                 flash("Movement is Successfully Saved","success")
-                
-                
         if 'edit_move' in request.form:
             edit = True
             movement_id = request.form['edit_move']
@@ -195,7 +184,6 @@ def movement():
     movements = Movement.query.all()
     return render_template("product_movement.html",movements =movements,products= Product.query.all(),locations = Location.query.all())
 
-<<<<<<< HEAD
 '''@app.route("/search<>")
 def search(search):
     locations = Location.query.all()
@@ -208,9 +196,6 @@ def search(search):
         return search
         return render_template("Report.html",search = search,locations = location)
 '''
-=======
-#Generating the Reports
->>>>>>> fb95f7fa65c7eb62f80ff5eb3257d1c64644265e
 
 @app.route("/Report")
 def Report(tag=None):
