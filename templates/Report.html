@@ -8,7 +8,6 @@ Report
 <form action="{{ url_for('Report') }}" autocomplete="off"> 
    <div class="row">
     <div class="col-md-4">
-    
     <input type="text" class="form-control" name="str" id = "str"  placeholder="Enter keyword to search"/> 
     </div>
     <div class="col-2" align="left">
@@ -21,13 +20,14 @@ Report
   <div class = "col"> {{ msg }}</div>
 
 {% if balance %}
-<table id="myTable" class="table table-hover table-bordered table-danger">
+<table id="myTable" class="table table-hover table-bordered table-danger" >
 
   <thead class="thead-dark">
       <tr>
-          <th scope="col">Locations</th>
-          <th scope="col">Products</th>
+          <th onclick="sortTable(0)" scope="col">Locations</th>
+          <th onclick="sortTable(1)" scope="col">Products</th>
           <th scope="col">Available Quantity</th>
+          </form>
       </tr>
   </thead>
   <tbody>
@@ -44,6 +44,45 @@ Report
 </table> 
 
 {% endif %}
+<script>
+function sortTable(n) {
+  var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+  table = document.getElementById("myTable");
+  switching = true;
+  dir = "asc"; 
+  while (switching) {
+    switching = false;
+    rows = table.rows;
+    for (i = 1; i < (rows.length - 1); i++) {
+      shouldSwitch = false;
+      x = rows[i].getElementsByTagName("TD")[n];
+      y = rows[i + 1].getElementsByTagName("TD")[n];
+      if (dir == "asc") {
+        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+          shouldSwitch= true;
+          break;
+        }
+      } else if (dir == "desc") {
+        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+          shouldSwitch = true;
+          break;
+        }
+      }
+    }
+    if (shouldSwitch) {
+      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+      switching = true;
+      switchcount ++;      
+    } else {
+      if (switchcount == 0 && dir == "asc") {
+        dir = "desc";
+        switching = true;
+      }
+    }
+  }
+}
+</script>
+
 </div>
 </div>
 {% endblock %}

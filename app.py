@@ -1,5 +1,6 @@
 
 from flask import Flask, render_template,flash,redirect,url_for,request,session, Response
+from flask import *
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 
@@ -188,15 +189,17 @@ def movement():
 
 
 @app.route("/Report")
-def Report(tag=None):
+def Report(tag=None,order= None):
     msg= ''
+    
     if 'str' in request.args:
         tag = request.args.get("str").capitalize()
         
     inv = balance(tag)
+    
     if request.args:
         if not inv:
-            msg = Markup("<h5>No such data is found!</h5>")
+            msg = Markup("<h4>No such data is found!</h4>")
     elif not inv:
         msg = Markup("<h4>There's currently no data to display. Add now!</h4>")
     
@@ -253,11 +256,8 @@ def balance(tag=None):
             else:
                 inv['product_qty'] = total
             balance.append(inv)
-    
-    
     return balance
-
-
+    
 
 if __name__ == "__main__":
     db.create_all()
