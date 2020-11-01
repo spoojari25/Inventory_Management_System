@@ -34,7 +34,13 @@
 8. Balance Report
 [![Balance Report](https://github.com/spoojari25/Inventory_Management_System/blob/master/utils/balaance_report.PNG "Balance Report")](https://github.com/spoojari25/Inventory_Management_System/blob/master/utils/balaance_report.PNG "Balance Report")
 
-7.Search Filter 
+9.Search Filter 
 [![Search Filter](https://github.com/spoojari25/Inventory_Management_System/blob/master/utils/search%20filter.PNG "Search Filter")](https://github.com/spoojari25/Inventory_Management_System/blob/master/utils/edit_location.PNG "Search Filter")
+
+10.Sort Location (Asc) 
+[![Sort Location](https://github.com/spoojari25/Inventory_Management_System/blob/master/utils/sorting_location.PNG "Sort Location")](https://github.com/spoojari25/Inventory_Management_System/blob/master/utils/sorting_location.PNG "Sort Location")
+
+11.Sort Product (Desc) 
+[![Sort Product](https://github.com/spoojari25/Inventory_Management_System/blob/master/utils/product_sort_reverse.PNG "Sort Product")](https://github.com/spoojari25/Inventory_Management_System/blob/master/utils/product_sort_reverse.PNG "Sort Product")
 
 
