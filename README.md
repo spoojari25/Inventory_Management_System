@@ -33,3 +33,8 @@
 
 8. Balance Report
 [![Balance Report](https://github.com/spoojari25/Inventory_Management_System/blob/master/utils/balaance_report.PNG "Balance Report")](https://github.com/spoojari25/Inventory_Management_System/blob/master/utils/balaance_report.PNG "Balance Report")
+
+7.Search Filter 
+[![Search Filter](https://github.com/spoojari25/Inventory_Management_System/blob/master/utils/search%20filter.PNG "Search Filter")](https://github.com/spoojari25/Inventory_Management_System/blob/master/utils/edit_location.PNG "Search Filter")
+
+
